@@ -13,7 +13,7 @@ import { Header, Account, Faucet, Ramp, Contract, GasGauge, Address } from "./co
 import { Transactor } from "./helpers";
 import { parseEther, formatEther } from "@ethersproject/units";
 //import Hints from "./Hints";
-import { Hints, ExampleUI, Subgraph } from "./views"
+import { Hurricane, ExampleUI, Subgraph } from "./views"
 import { INFURA_ID, ETHERSCAN_KEY } from "./constants";
 
 
@@ -35,7 +35,7 @@ const localProviderUrl = "http://localhost:8545"; // for xdai: https://dai.poa.n
 // as you deploy to other networks you can set REACT_APP_PROVIDER=https://dai.poa.network in packages/react-app/.env
 const localProviderUrlFromEnv = process.env.REACT_APP_PROVIDER ? process.env.REACT_APP_PROVIDER : localProviderUrl;
 if(DEBUG) console.log("🏠 Connecting to provider:", localProviderUrlFromEnv);
-const localProvider = new JsonRpcProvider(localProviderUrlFromEnv);
+const localProvider = new JsonRpcProvider(localProviderUrl);
 
 
 
@@ -99,10 +99,10 @@ function App(props) {
 
         <Menu style={{ textAlign:"center" }} selectedKeys={[route]} mode="horizontal">
           <Menu.Item key="/">
-            <Link onClick={()=>{setRoute("/")}} to="/">YourContract</Link>
+            <Link onClick={()=>{setRoute("/")}} to="/">Contracts</Link>
           </Menu.Item>
-          <Menu.Item key="/hints">
-            <Link onClick={()=>{setRoute("/hints")}} to="/hints">Hints</Link>
+          <Menu.Item key="/hurricane">
+            <Link onClick={()=>{setRoute("/hurricane")}} to="/hurricane">Hurricane</Link>
           </Menu.Item>
           <Menu.Item key="/exampleui">
             <Link onClick={()=>{setRoute("/exampleui")}} to="/exampleui">ExampleUI</Link>
@@ -120,15 +120,22 @@ function App(props) {
                 and give you a form to interact with it locally
             */}
             <Contract
-              name="YourContract"
+              name='Hurricane'
               signer={userProvider.getSigner()}
               provider={localProvider}
               address={address}
               blockExplorer={blockExplorer}
             />
+            {/* <Contract
+              name="YourContract"
+              signer={userProvider.getSigner()}
+              provider={localProvider}
+              address={address}
+              blockExplorer={blockExplorer}
+            /> */}
           </Route>
-          <Route path="/hints">
-            <Hints
+          <Route path="/hurricane">
+            <Hurricane
               address={address}
               yourLocalBalance={yourLocalBalance}
               mainnetProvider={mainnetProvider}
@@ -160,7 +167,7 @@ function App(props) {
       </BrowserRouter>
 
 
-      {/* 👨‍💼 Your account is in the top right with a wallet at connect options */}
+      {/* 👨‍💼 Your account is in the top right with a wallet and connect options */}
       <div style={{ position: "fixed", textAlign: "right", right: 0, top: 0, padding: 10 }}>
          <Account
            address={address}
@@ -206,7 +213,7 @@ function App(props) {
              {
 
                /*  if the local provider has a signer, let's show the faucet:  */
-               localProvider && localProvider.connection && localProvider.connection.url && localProvider.connection.url.indexOf("localhost")>=0 && !process.env.REACT_APP_PROVIDER && price > 1 ? (
+               true && localProvider && localProvider.connection && localProvider.connection.url && localProvider.connection.url.indexOf("localhost") >= 0? (
                  <Faucet localProvider={localProvider} price={price} ensProvider={mainnetProvider}/>
                ) : (
                  ""

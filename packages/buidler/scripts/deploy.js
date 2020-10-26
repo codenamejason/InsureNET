@@ -7,8 +7,10 @@ async function main() {
   console.log("📡 Deploy \n");
 
   // auto deploy to read contract directory and deploy them all (add ".args" files for arguments)
-  await autoDeploy();
+  //await autoDeploy();
   // OR
+  // (owner, oracle)
+  const hurricaneContract = await deploy("Hurricane", ["0xa0df350d2637096571F7A701CBc1C5fdE30dF76A", "0xa0df350d2637096571F7A701CBc1C5fdE30dF76A"]);
   // custom deploy (to use deployed addresses dynamically for example:)
   // const exampleToken = await deploy("ExampleToken")
   // const examplePriceOracle = await deploy("ExamplePriceOracle")
