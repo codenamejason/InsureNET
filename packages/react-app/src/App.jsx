@@ -28,6 +28,10 @@ if(DEBUG) console.log("📡 Connecting to Mainnet Ethereum");
 //const mainnetProvider = getDefaultProvider("mainnet", { infura: INFURA_ID, etherscan: ETHERSCAN_KEY, quorum: 1 });
 // const mainnetProvider = new InfuraProvider("mainnet",INFURA_ID);
 const mainnetProvider = new JsonRpcProvider("https://mainnet.infura.io/v3/"+INFURA_ID)
+const mainnetForkProvider = 'https://localhost:8545';
+const kovanProvider = getDefaultProvider("kovan", { infura: INFURA_ID, etherscan: ETHERSCAN_KEY, quorum: 1 });
+const rinkebyProvider = getDefaultProvider('rinkeby', { infura: INFURA_ID, etherscan: ETHERSCAN_KEY, quorum: 1 })
+const ropstenProvider = getDefaultProvider('ropsten', { infura: INFURA_ID, etherscan: ETHERSCAN_KEY, quorum: 1 })
 // ( ⚠️ Getting "failed to meet quorum" errors? Check your INFURA_ID)
 
 // 🏠 Your local provider is usually pointed at your local blockchain
@@ -137,9 +141,13 @@ function App(props) {
           <Route path="/hurricane">
             <Hurricane
               address={address}
-              yourLocalBalance={yourLocalBalance}
               mainnetProvider={mainnetProvider}
-              price={price}
+              ropstenProvider={ropstenProvider}
+              userProvider={userProvider}
+              localProvider={localProvider}
+              tx={tx}
+              readContracts={readContracts}
+              writeContracts={writeContracts}
             />
           </Route>
           <Route path="/exampleui">

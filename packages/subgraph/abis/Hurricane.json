@@ -5,10 +5,46 @@
         "internalType": "address payable",
         "name": "_owner",
         "type": "address"
+      },
+      {
+        "internalType": "address payable",
+        "name": "_oracle",
+        "type": "address"
       }
     ],
     "stateMutability": "nonpayable",
     "type": "constructor"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "oracle",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "enum Hurricane.Outcome",
+        "name": "outcome",
+        "type": "uint8"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "zipCodeAffected",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "timestamp",
+        "type": "uint256"
+      }
+    ],
+    "name": "OutcomeReported",
+    "type": "event"
   },
   {
     "anonymous": false,
@@ -20,15 +56,33 @@
         "type": "uint256"
       },
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "address",
         "name": "owner",
         "type": "address"
       },
       {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "zipCode",
+        "type": "uint256"
+      },
+      {
         "indexed": false,
         "internalType": "uint256",
         "name": "season",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "premium",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "timestamp",
         "type": "uint256"
       }
     ],
@@ -42,30 +96,192 @@
   {
     "inputs": [
       {
-        "internalType": "uint256",
-        "name": "_premium",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_season",
-        "type": "uint256"
-      }
-    ],
-    "name": "createPolicy",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      },
-      {
-        "internalType": "address",
-        "name": "",
+        "internalType": "address payable",
+        "name": "_insured",
         "type": "address"
       }
     ],
-    "stateMutability": "payable",
+    "name": "getPoliciesForInsured",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "id",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "season",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "zipCodeCovered",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "premium",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address payable",
+            "name": "owner",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "possiblePayout3",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "possiblePayout4",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "possiblePayout5",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bool",
+            "name": "voided",
+            "type": "bool"
+          }
+        ],
+        "internalType": "struct Hurricane.Policy[]",
+        "name": "",
+        "type": "tuple[]"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_id",
+        "type": "uint256"
+      }
+    ],
+    "name": "getPolicy",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "id",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "season",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "zipCodeCovered",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "premium",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address payable",
+            "name": "owner",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "possiblePayout3",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "possiblePayout4",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "possiblePayout5",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bool",
+            "name": "voided",
+            "type": "bool"
+          }
+        ],
+        "internalType": "struct Hurricane.Policy",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "policies",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "id",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "season",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "zipCodeCovered",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "premium",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address payable",
+        "name": "owner",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "possiblePayout3",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "possiblePayout4",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "possiblePayout5",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bool",
+        "name": "voided",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -80,11 +296,153 @@
     "outputs": [
       {
         "internalType": "uint256",
+        "name": "id",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "season",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "zipCodeCovered",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "premium",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address payable",
+        "name": "owner",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "possiblePayout3",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "possiblePayout4",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "possiblePayout5",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bool",
+        "name": "voided",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_season",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_zipCode",
+        "type": "uint256"
+      }
+    ],
+    "name": "purchasePolicy",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "enum Hurricane.Outcome",
+        "name": "_outcome",
+        "type": "uint8"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_zipCodeAffected",
+        "type": "uint256"
+      }
+    ],
+    "name": "reportOutcome",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "seasonEnd",
+    "outputs": [
+      {
+        "internalType": "uint256",
         "name": "",
         "type": "uint256"
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "seasonStart",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "policyId",
+        "type": "uint256"
+      }
+    ],
+    "name": "voidPolicy",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {

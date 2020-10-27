@@ -1,4 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0
 pragma solidity >=0.6.0 <0.7.0;
+pragma experimental ABIEncoderV2;
 
 import "@openzeppelin/contracts/math/SafeMath.sol";
 import "@nomiclabs/buidler/console.sol";
@@ -6,46 +8,74 @@ import "@nomiclabs/buidler/console.sol";
 contract Hurricane {
     using SafeMath for uint256;
 
-    address payable owner;
-    
-    uint public coupon;
+    address payable owner;    
     address payable oracle;
     address payable insured;
-    address payable investor;
 
-    uint public seasonStart;
-    uint public seasonEnd;
+    uint public seasonStart = 6;
+    uint public seasonEnd = 11;
 
-    mapping(address => uint256) public policyHolders;
+    uint256 policyCount;   
+
+    //mapping(address => uint256) public policyHolders;
     mapping(address => uint256) insuredZipCodes;
+    mapping(uint256 => Policy) public policies;
+    mapping(address => Policy) public policyHolders;
+    
+    modifier onlyOwner {
+        require(msg.sender == owner, "You need to be the owner.");
+        _;
+    }
 
+    modifier onlyOracle {
+        require(msg.sender == oracle, "You need to be the oaracle.");
+        _;
+    }
     
     /**
     * @dev Outcome of the hurricane or named event
     */
-    enum Outcome { NONE, CAT_3, CAT_4, CAT_5, VOID, OTHER }
+    enum Outcome { NONE, VOID, OTHER, CAT_3, CAT_4, CAT_5 }
+    // 0, 1, 2, 3, 4, 5
 
 
     /** @dev Events */
     event PolicyCreated (
         uint256 id,
-        address owner,
-        uint256 season
+        address indexed owner,
+        uint256 indexed zipCode,
+        uint256 season,
+        uint256 premium,
+        uint256 timestamp
     );
 
     event OutcomeReported (
         address oracle,
-        Outcome outcome
-    )
+        Outcome indexed outcome,
+        uint256 indexed zipCodeAffected,
+        uint256 timestamp
+    );
 
+    struct Insured {
+        address payable id;
+        mapping(address => Policy) policies;
+    }
 
     /** @dev Policy Stuct */
     struct Policy {
         uint256 id;
-        
+        uint256 season;
+        uint256 zipCodeCovered;
+        uint256 premium;
+        address payable owner;
+        uint256 possiblePayout3;
+        uint256 possiblePayout4;
+        uint256 possiblePayout5;
+        bool voided;
     }
 
-    Outcome outcome;
+    // Internal policy array
+    //Policy[] public policyArray;
 
     /**
     * @dev Constructor function
@@ -57,40 +87,97 @@ contract Hurricane {
         oracle = _oracle;
     }
 
-    /** @dev Functions */
+    function purchasePolicy( 
+        uint256 _season,
+        uint256 _zipCode
+    )
+        public
+        payable
+        returns (uint256, address, uint256, uint256)   
+    {
+        createPolicy(_season, _zipCode);
+    }
+
+    function voidPolicy(
+        uint256 policyId        
+    )
+        public
+        onlyOwner
+        returns(bool)        
+    {
+        policies[policyId].voided = true;
+
+        return true;
+    }
 
     /**
     * @dev create a hurricane policy
-    * @param _premium the amount of total premium. ex: .5 ETH
     * @param _season the year of coverage. ex: 2020
+    * @param _zipCode the zip code of covered home
     */
     function createPolicy (
-        uint256 _premium,
-        uint256 _season
+        uint256 _season,
+        uint256 _zipCode
     )   
-        public
-        payable 
-        returns (uint256, address)
+        internal         
+        returns (uint256, address, uint256, uint256)
     {
         // ToDo: Checks
 
+        uint256 policyId = policyCount ++;
+
+        policies[policyId].id = policyId;
+        policies[policyId].season = _season;
+        policies[policyId].zipCodeCovered = _zipCode;
+        policies[policyId].premium = msg.value;
+        policies[policyId].owner = msg.sender;
+        policies[policyId].possiblePayout3 = msg.value.mul(10);
+        policies[policyId].possiblePayout4 = msg.value.mul(20);
+        policies[policyId].possiblePayout5 = msg.value.mul(30);
+        policies[policyId].voided = false; // backup to deactivate/activate a policy
+        
+        emit PolicyCreated(policyId, msg.sender, _zipCode, _season, msg.value, block.timestamp);
+        console.log("Policy Created");
 
         // return the policy id and owner
-        return (1, 0xa0df350d2637096571F7A701CBc1C5fdE30dF76A);
+        return (policyId, msg.sender, msg.value, _season);
     }
 
-        // Called by oracle to report the outcome
-    function reportOutcome(Outcome _outcome)
+    function getPolicy(uint256 _id)
+        public
+        view
+        returns(Policy memory)
+    {
+        return policies[_id];
+    }
+
+    function getPoliciesForInsured(address payable _insured)
+        public
+        returns(Policy[] memory)
+    {
+        Policy[] memory userPolicies;
+
+        return userPolicies;
+    }
+
+    // Called by oracle to report the outcome
+    // ToDo: figure out how to apply to the correct policies...
+    function reportOutcome(Outcome _outcome, uint256 _zipCodeAffected)
         external
+        onlyOracle
     {
         require(msg.sender == oracle, 'only oracle can report outcome');
-        require(now > seasonStart, 'too early, out of season');
-        require(now < seasonEnd, 'too late, out of season');
-
-        outcome = _outcome;
+        require(msg.sender != address(0), 'cannot call from zero address');
+        // ToDo: figure out...
+        //require(now >= seasonStart, 'too early, out of season');
+        //require(now <= seasonEnd, 'too late, out of season');
+        // ToDo: need to figure out how to handle the outcomes
+        
 
         // set the principal amount before sending or amount will be 0
         uint principal = 0;
+
+        emit OutcomeReported(oracle, _outcome, _zipCodeAffected, block.timestamp);
 
         // Send payment based on outcome
         if(_outcome == Outcome.CAT_3) {
