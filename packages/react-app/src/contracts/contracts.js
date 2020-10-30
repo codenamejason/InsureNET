@@ -1,1 +1,1 @@
-module.exports = ["Hurricane","YourContract"];
+module.exports = ["Hurricane","PolicyNFT","YourContract"];

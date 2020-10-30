@@ -4,6 +4,7 @@ pragma experimental ABIEncoderV2;
 
 import "@openzeppelin/contracts/math/SafeMath.sol";
 import "@nomiclabs/buidler/console.sol";
+import "./PolicyNFT.sol";
 
 contract Hurricane {
     using SafeMath for uint256;
@@ -15,7 +16,9 @@ contract Hurricane {
     uint public seasonStart = 6;
     uint public seasonEnd = 11;
 
-    uint256 policyCount;   
+    uint256 policyCount;
+
+    PolicyNFT nftToken;
 
     //mapping(address => uint256) public policyHolders;
     mapping(address => uint256) insuredZipCodes;
@@ -59,6 +62,13 @@ contract Hurricane {
     struct Insured {
         address payable id;
         mapping(address => Policy) policies;
+        string firstName;
+        string lastName;
+        string email;
+        string street;
+        string city;
+        string state;
+        uint256 zip;
     }
 
     /** @dev Policy Stuct */
@@ -93,9 +103,12 @@ contract Hurricane {
     )
         public
         payable
-        returns (uint256, address, uint256, uint256)   
+        returns (bool)   
     {
         createPolicy(_season, _zipCode);
+
+        // ToDo: return false if an error occurs
+        return true;
     }
 
     function voidPolicy(
@@ -107,6 +120,7 @@ contract Hurricane {
     {
         policies[policyId].voided = true;
 
+        // ToDo: return false if an error occurs
         return true;
     }
 
@@ -120,7 +134,7 @@ contract Hurricane {
         uint256 _zipCode
     )   
         internal         
-        returns (uint256, address, uint256, uint256)
+        returns (bool)
     {
         // ToDo: Checks
 
@@ -139,8 +153,8 @@ contract Hurricane {
         emit PolicyCreated(policyId, msg.sender, _zipCode, _season, msg.value, block.timestamp);
         console.log("Policy Created");
 
-        // return the policy id and owner
-        return (policyId, msg.sender, msg.value, _season);
+        // ToDo: return false if an error occurs
+        return true;
     }
 
     function getPolicy(uint256 _id)
@@ -151,14 +165,17 @@ contract Hurricane {
         return policies[_id];
     }
 
-    function getPoliciesForInsured(address payable _insured)
+    function getPoliciesForInsured(address _insured)
         public
+        view
         returns(Policy[] memory)
     {
         Policy[] memory userPolicies;
 
         return userPolicies;
     }
+
+
 
     // Called by oracle to report the outcome
     // ToDo: figure out how to apply to the correct policies...

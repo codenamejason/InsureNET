@@ -27,7 +27,7 @@ const blockExplorer = "https://etherscan.io/" // for xdai: "https://blockscout.c
 if(DEBUG) console.log("📡 Connecting to Mainnet Ethereum");
 //const mainnetProvider = getDefaultProvider("mainnet", { infura: INFURA_ID, etherscan: ETHERSCAN_KEY, quorum: 1 });
 // const mainnetProvider = new InfuraProvider("mainnet",INFURA_ID);
-const mainnetProvider = new JsonRpcProvider("https://mainnet.infura.io/v3/"+INFURA_ID)
+const mainnetProvider = new JsonRpcProvider("https://mainnet.infura.io/v3/" + INFURA_ID)
 const mainnetForkProvider = 'https://localhost:8545';
 const kovanProvider = getDefaultProvider("kovan", { infura: INFURA_ID, etherscan: ETHERSCAN_KEY, quorum: 1 });
 const rinkebyProvider = getDefaultProvider('rinkeby', { infura: INFURA_ID, etherscan: ETHERSCAN_KEY, quorum: 1 })
@@ -125,6 +125,13 @@ function App(props) {
             */}
             <Contract
               name='Hurricane'
+              signer={userProvider.getSigner()}
+              provider={localProvider}
+              address={address}
+              blockExplorer={blockExplorer}
+            />
+            <Contract
+              name='PolicyNFT'
               signer={userProvider.getSigner()}
               provider={localProvider}
               address={address}

@@ -4,6 +4,7 @@ import { SyncOutlined } from '@ant-design/icons';
 import { Address, AddressInput, Balance } from "../components";
 import { useContractReader, useEventListener } from "../hooks";
 import { parseEther, formatEther } from "@ethersproject/units";
+import { local } from "web3modal";
 
 export default function ExampleUI({address, mainnetProvider, userProvider, localProvider, yourLocalBalance, price, tx, readContracts, writeContracts }) {
 
@@ -23,17 +24,17 @@ export default function ExampleUI({address, mainnetProvider, userProvider, local
   const policyEvents = useEventListener(readContracts, "Hurricane", "PolicyCreated", localProvider, 1);
   console.log("📟 PolicyCreated events:", policyEvents)
 
+  const nftEvents = useEventListener(readContracts, "PolicyNFT", "PolicyTokenIssued", localProvider, 1);
+  console.log(`📟 NFT Events => ${nftEvents}`);
+
   return (
     <div>
       {/*
         ⚙️ Here is an example UI that displays and sets the purpose in your smart contract:
       */}
       <div style={{border:"1px solid #cccccc", padding:16, width:400, margin:"auto",marginTop:64}}>
-        <h2>Test UI:</h2>
-
-        
+        <h2>Test UI:</h2>        
         <Divider/>
-
         <div style={{margin:8}}>
           Season:
           <Input onChange={(e)=>{setSeason(e.target.value)}} />
@@ -47,41 +48,14 @@ export default function ExampleUI({address, mainnetProvider, userProvider, local
             }))
           }}>Buy Policy</Button>
         </div>
-
-
         <Divider />
-
-        Your Address:
-        <Address
-            value={address}
-            ensProvider={mainnetProvider}
-            fontSize={16}
-        />
-
-        <Divider/>
-
-        {  /* use formatEther to display a BigNumber: */ }
-        <h2>Your Balance: {yourLocalBalance ? formatEther(yourLocalBalance) : "..."}</h2>
-
-        OR
-
-        <Balance
-          address={address}
-          provider={localProvider}
-          dollarMultiplier={price}
-        />
-
-        <Divider/>
-
         Hurricane Contract Address:
         <Address
             value={readContracts ? readContracts.Hurricane.address : readContracts}
             ensProvider={mainnetProvider}
             fontSize={16}
         />
-
         <Divider />
-
         <div style={{margin:8}}>
           <Button onClick={()=>{
             /*
@@ -135,6 +109,23 @@ export default function ExampleUI({address, mainnetProvider, userProvider, local
           renderItem={item => (
             <List.Item>
               {item[0].toString()} => {item[1]} => {item[2].toString()}=> {item[3].toString()} => {formatEther(item[4])} => {item[5].toString()}
+            </List.Item>
+          )}
+        />
+      </div>
+      <div style={{ width:600, margin: "auto", marginTop:32, paddingBottom:32 }}>
+        <h2>NFT Events:</h2>
+        <List
+          bordered
+          dataSource={nftEvents}
+          renderItem={item => (
+            <List.Item>
+              <Address
+                  value={item[0].toString()}
+                  ensProvider={mainnetProvider}
+                  fontSize={16}
+                /> =>
+                {item[1].toString()} => {item[2].toString()}              
             </List.Item>
           )}
         />
