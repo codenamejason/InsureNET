@@ -1,9 +1,13 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Button, Checkbox, Tabs, Switch, Progress, List, Divider, Input, Card, DatePicker, Slider, Spin, Form, Select, Row, Col, Menu, message } from "antd";
+import { Button, Checkbox, Tabs, Switch, Progress, List, Divider, Input, Card, 
+  DatePicker, Slider, Spin, Form, Select, Row, Col, Menu, message, Steps } from "antd";
 import { StepForwardOutlined, SyncOutlined, UserOutlined } from '@ant-design/icons';
 import { Address, AddressInput, Balance } from "../components";
 import { useContractReader, useEventListener } from "../hooks";
 import { parseEther, formatEther } from "@ethersproject/units";
+
+
+const states = require('../data/states.json');
 
 const layout = {
   labelCol: {
@@ -23,10 +27,32 @@ const tailLayout = {
 
 const { TabPane } = Tabs;
 const { Option } = Select;
+const { Step } = Steps;
 const style = { background: '#306E7E', color: '#E7C8C0', padding: '8px', margin: '8px' };
 
+const steps = [
+  {
+    title: 'Coverage',
+    content: 'Coverage content',
+  },
+  {
+    title: 'Insured Info',
+    content: 'Insured content',
+  },
+  {
+    title: 'Confirmation',
+    content: 'Confirmation content',
+  },
+  {
+    title: 'Payment',
+    content: 'Payment content',
+  }
+];
+
+
+
 const CheckboxGroup = Checkbox.Group;
-const operations = <div><Progress percent={25} steps={4} size='default' strokeColor="#33FF21" />&nbsp;<Button>Next</Button></div>;
+
 
 const Hurricane = ({mainnetProvider, ropstenProvider, address, userProvider, localProvider, yourLocalBalance, price, tx, readContracts, writeContracts }) => {
   const [season, setSeason] = useState(2021);
@@ -37,8 +63,19 @@ const Hurricane = ({mainnetProvider, ropstenProvider, address, userProvider, loc
   const [streetAddress, setStreetAddress] = useState('');
   const [city, setCity] = useState('');
   const [state, setState] = useState('');  
-  const [zipCode, setZipCode] = useState(12345);
-  
+  const [zipCode, setZipCode] = useState(0);
+  const [step, setStep] = useState(1);
+
+  const operations =  <div>
+                        <Progress percent={25} steps={4} size='default' strokeColor="#33FF21" />
+                        &nbsp;
+                        <Button onClick={(e) => {
+                          const current = step + 1;
+                          console.info(step)
+                          setStep(current)
+                          console.info(step)
+                        }}>Next</Button>
+                      </div>;
 
   const onSeasonChange = (value) => {
     switch (value) {
@@ -64,18 +101,40 @@ const Hurricane = ({mainnetProvider, ropstenProvider, address, userProvider, loc
       //.then(() => message.info('Loading finished is finished', 2.5));
   };
 
+  // When the form is submitted successfully
   const onFinish = (values) => {
     console.log(`Success => ${values}`)
   }
 
+  // Error on form submission
   const onFinishFailed = (errorInfo) => {
     console.log(`Failed => ${errorInfo}`)
   }
+
+  const prevStep = () => {
+    const currentStep = step - 1;
+    setStep(currentStep);
+  }
+
+  const nextStep = () => {
+    const currentStep = step + 1;
+    setStep(currentStep);
+  }
+  
+  const onStateSelectChange = (e) => {
+    //setState(e.target.value);
+    console.log(e)
+  }  
 
   return (
     <div style={style}>
       <div>
         <Tabs tabBarExtraContent={operations}>
+          {/* <Steps current={step}>
+            {steps.map((item, idx) => {
+              return <Step key={idx} title={item.title} />
+            })}
+          </Steps> */}
           {/* Coverage Selection Tab */}
           <TabPane tab="Coverage" key="1">
             <h2>Select Coverage</h2>
@@ -96,7 +155,7 @@ const Hurricane = ({mainnetProvider, ropstenProvider, address, userProvider, loc
                 </Form.Item>
               </Col>
               <Col span={8}>
-              <Form.Item label='Zip Code' name='zip-code' rules={[{ required: true, message: 'Please enter a zip code' }]}>
+              <Form.Item label='Covered Zip Code' name='zip-code' rules={[{ required: true, message: 'Please enter a zip code' }]}>
                   <Input
                     onChange={(e)=>{ setZipCode(e.target.value); }}
                   />
@@ -120,7 +179,7 @@ const Hurricane = ({mainnetProvider, ropstenProvider, address, userProvider, loc
                     onClick={()=>{
                       success();
                       console.log("Policy purchased => ", season, zipCode, premium)
-                      tx( writeContracts.Hurricane.purchasePolicy(season, zipCode, {
+                      tx(writeContracts.Hurricane.purchasePolicy(address, season, zipCode, {
                         value: parseEther(premium)
                       }))
                     }}
@@ -166,7 +225,13 @@ const Hurricane = ({mainnetProvider, ropstenProvider, address, userProvider, loc
             <Row gutter={16} style={{ padding: '8px' }}>
               <Col span={12}>
                 <Form.Item>
-                   <Input size='middle' placeholder='State' />
+                   {/* <Input size='middle' placeholder='State' /> */}
+                   <Select size='middle' defaultValue='' onChange={onStateSelectChange}>
+                     {states.map((item,idx) => {
+                       //console.log(item.abbreviation)
+                       return <Option key={idx} >{item.name}</Option>
+                     })}
+                   </Select>
                 </Form.Item>
               </Col>
               <Col span={12}>

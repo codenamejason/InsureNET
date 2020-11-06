@@ -228,6 +228,37 @@
   {
     "inputs": [
       {
+        "internalType": "address",
+        "name": "insured",
+        "type": "address"
+      },
+      {
+        "internalType": "string",
+        "name": "tokenUri",
+        "type": "string"
+      }
+    ],
+    "name": "issuePolicyNft",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "nftToken",
+    "outputs": [
+      {
+        "internalType": "contract PolicyNFT",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "uint256",
         "name": "",
         "type": "uint256"
@@ -346,6 +377,11 @@
   {
     "inputs": [
       {
+        "internalType": "address payable",
+        "name": "_insured",
+        "type": "address"
+      },
+      {
         "internalType": "uint256",
         "name": "_season",
         "type": "uint256"
@@ -359,24 +395,9 @@
     "name": "purchasePolicy",
     "outputs": [
       {
-        "internalType": "uint256",
+        "internalType": "bool",
         "name": "",
-        "type": "uint256"
-      },
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
+        "type": "bool"
       }
     ],
     "stateMutability": "payable",
@@ -424,6 +445,19 @@
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_address",
+        "type": "address"
+      }
+    ],
+    "name": "setNftTokenAddress",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {

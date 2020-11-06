@@ -15,10 +15,15 @@ contract Hurricane {
 
     uint public seasonStart = 6;
     uint public seasonEnd = 11;
+    uint cat3Low = 111;
+    uint cat3High = 129;
+    uint cat4Low = 130;
+    uint cat4High = 156;
+    uint cat5Low = 157;
 
     uint256 policyCount;
 
-    PolicyNFT nftToken;
+    //PolicyNFT nftToken;
 
     //mapping(address => uint256) public policyHolders;
     mapping(address => uint256) insuredZipCodes;
@@ -84,6 +89,9 @@ contract Hurricane {
         bool voided;
     }
 
+    PolicyNFT public nftToken;
+    uint setTokenCount = 0;
+
     // Internal policy array
     //Policy[] public policyArray;
 
@@ -97,18 +105,37 @@ contract Hurricane {
         oracle = _oracle;
     }
 
-    function purchasePolicy( 
+    function setNftTokenAddress(address _address)
+        public
+        onlyOwner
+    {
+        require(setTokenCount == 0, "Token is already set");
+        setTokenCount = 1;
+        nftToken = PolicyNFT(_address);        
+    }
+
+    function purchasePolicy(
+        address payable _insured,
         uint256 _season,
-        uint256 _zipCode
+        uint256 _zipCode,
+        string memory _tokenUri
     )
         public
         payable
         returns (bool)   
     {
         createPolicy(_season, _zipCode);
+        issuePolicyNft(_insured, _tokenUri);
 
         // ToDo: return false if an error occurs
         return true;
+    }
+
+    function issuePolicyNft(address insured, string memory tokenUri)
+        public
+    {
+        nftToken.issuePolicy(insured, tokenUri);
+
     }
 
     function voidPolicy(
