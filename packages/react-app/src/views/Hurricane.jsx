@@ -72,7 +72,7 @@ const Hurricane = ({mainnetProvider, ropstenProvider, address, userProvider, loc
                         <Button onClick={(e) => {
                           const current = step + 1;
                           console.info(step)
-                          setStep(current)
+                          nextStep()
                           console.info(step)
                         }}>Next</Button>
                       </div>;
