@@ -390,6 +390,11 @@
         "internalType": "uint256",
         "name": "_zipCode",
         "type": "uint256"
+      },
+      {
+        "internalType": "string",
+        "name": "_tokenUri",
+        "type": "string"
       }
     ],
     "name": "purchasePolicy",

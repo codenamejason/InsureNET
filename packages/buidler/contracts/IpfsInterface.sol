@@ -3,29 +3,26 @@ pragma solidity >=0.6.0 <0.7.0;
 
 contract IpfsInterface {
 
- string ipfsHash;
- 
- mapping(address => string) public userFiles;
- mapping(address => string) public nftUriByOwner;
+  mapping(address => string) public userFiles;
+  mapping(address => string) public nftUriByOwner;
 
- function setUri(string memory uri)
+
+  function setUri(string memory uri)
     public
-{
+  {
     nftUriByOwner[msg.sender] = uri;
-}
+  }
 
+  function sendHash(string memory x) public {
+    userFiles[msg.sender] = x;
+  }
 
-
-
-
-
- 
- function sendHash(string memory x) public {
-   ipfsHash = x;
- }
-
- function getHash() public view returns (string memory x) {
-   return ipfsHash;
- }
+  function getHash()  
+    public 
+    view 
+    returns (string memory x) 
+  {
+      return userFiles[msg.sender];
+  }
 
 }

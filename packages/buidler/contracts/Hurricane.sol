@@ -107,7 +107,6 @@ contract Hurricane {
 
     function setNftTokenAddress(address _address)
         public
-        onlyOwner
     {
         require(setTokenCount == 0, "Token is already set");
         setTokenCount = 1;
@@ -124,6 +123,7 @@ contract Hurricane {
         payable
         returns (bool)   
     {
+        require(msg.value > 0, "CREATE_POLICY::Must send your premium when buying policy.");
         createPolicy(_season, _zipCode);
         issuePolicyNft(_insured, _tokenUri);
 

@@ -179,7 +179,7 @@ const Hurricane = ({mainnetProvider, ropstenProvider, address, userProvider, loc
                     onClick={()=>{
                       success();
                       console.log("Policy purchased => ", season, zipCode, premium)
-                      tx(writeContracts.Hurricane.purchasePolicy(address, season, zipCode, {
+                      tx(writeContracts.Hurricane.purchasePolicy(address, season, zipCode, 'https://tokenUri.com/', {
                         value: parseEther(premium)
                       }))
                     }}

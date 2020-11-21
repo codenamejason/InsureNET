@@ -41,7 +41,12 @@ const localProviderUrlFromEnv = process.env.REACT_APP_PROVIDER ? process.env.REA
 if(DEBUG) console.log("🏠 Connecting to provider:", localProviderUrlFromEnv);
 const localProvider = new JsonRpcProvider(localProviderUrl);
 
+const privateKey = process.env.PRIVATE_KEY;
 
+// Add your Ethereum wallet to the Web3 object
+web3.eth.accounts.wallet.add('0xb8c1b5c1d81f9475fdf2e334517d29f733bdfa40682207571b12fc1142cbf329');//('0x6990a4ae6c48cf338b35a8c3fa9fe672399b737af69d436c05640124e21e8e2f');
+const connectedWalletAddress = web3.eth.accounts.wallet[0].address;
+console.log('Connected Wallet', connectedWalletAddress);
 
 function App(props) {
   const [injectedProvider, setInjectedProvider] = useState();
