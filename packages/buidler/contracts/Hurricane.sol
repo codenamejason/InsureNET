@@ -132,7 +132,7 @@ contract Hurricane {
     }
 
     function issuePolicyNft(address insured, string memory tokenUri)
-        public
+        internal
     {
         nftToken.issuePolicy(insured, tokenUri);
 

@@ -12,6 +12,8 @@ export default function ExampleUI({address, mainnetProvider, userProvider, local
   const [season, setSeason] = useState(0);
   const [zipCode, setZipCode] = useState(0);
   const [policyInfo, setPolicyInfo] = useState({})
+  const [policyId, setPolicyId] = useState(0)
+  
 
   // keep track of a variable from the contract in the local React state:
   // const purpose = useContractReader(readContracts,"YourContract", "purpose")
@@ -34,20 +36,7 @@ export default function ExampleUI({address, mainnetProvider, userProvider, local
       */}
       <div style={{border:"1px solid #cccccc", padding:16, width:400, margin:"auto",marginTop:64}}>
         <h2>Test UI:</h2>        
-        <Divider/>
-        <div style={{margin:8}}>
-          Season:
-          <Input onChange={(e)=>{setSeason(e.target.value)}} />
-          Zip Code Covered:
-          <Input onChange={(e)=>{setZipCode(e.target.value)}} />
-          <Button onClick={()=>{
-            //console.log("newPurpose",newPurpose)
-            /* look how you call setPurpose on your contract: */
-            tx( writeContracts.Hurricane.purchasePolicy(season, zipCode, {
-              value: parseEther(".5")
-            }))
-          }}>Buy Policy</Button>
-        </div>
+     
         <Divider />
         Hurricane Contract Address:
         <Address
@@ -81,22 +70,31 @@ export default function ExampleUI({address, mainnetProvider, userProvider, local
           }}>Buy Policy for 1 ETH</Button>
         </div>
         <div style={{margin:8}}>
+        Policy Id:
+        <Input onChange={(e) => {
+            setPolicyId(e.target.value)
+        }} />
         <Button onClick={()=>{
             /* look how we call setPurpose AND send some value along */
-            tx( writeContracts.Hurricane.getPolicy(2) )
+            tx( writeContracts.Hurricane.getPolicy(policyId) )
               .then((res) => {
                 console.table(`${res}`);
                 setPolicyInfo(res);
               })
             /* this will fail until you make the setPurpose function payable */
-          }}>Get A Policy</Button>
+          }}>Get Policy</Button>
         </div>
-        <div style={{ width:600, margin: "auto", marginTop:32, paddingBottom:32 }}>
         
-        </div>
 
       </div>
+      <div style={{ width:600, margin: "auto", marginTop:32, paddingBottom:32 }}>
+          Policy:
+          <div>
+            Owner:  {policyInfo.owner}
+          </div>
+         
 
+      </div>
       {/*
         📑 Maybe display a list of events?
           (uncomment the event and emit line in YourContract.sol! )

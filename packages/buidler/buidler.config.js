@@ -43,19 +43,19 @@ module.exports = {
       */
     },
     rinkeby: {
-      url: "https://rinkeby.infura.io/v3/c954231486fa42ccb6d132b406483d14", //<---- YOUR INFURA ID! (or it won't work)
+      url: "https://rinkeby.infura.io/v3/5c19088a9f804202b4fe954c029de555", // <---- YOUR INFURA ID! (or it won't work)
       accounts: {
         mnemonic: mnemonic(),
       },
     },
     mainnet: {
-      url: "https://mainnet.infura.io/v3/c954231486fa42ccb6d132b406483d14", //<---- YOUR INFURA ID! (or it won't work)
+      url: "https://mainnet.infura.io/v3/5c19088a9f804202b4fe954c029de555", // <---- YOUR INFURA ID! (or it won't work)
       accounts: {
         mnemonic: mnemonic(),
       },
     },
     ropsten: {
-      url: "https://ropsten.infura.io/v3/c954231486fa42ccb6d132b406483d14", //<---- YOUR INFURA ID! (or it won't work)
+      url: "https://ropsten.infura.io/v3/5c19088a9f804202b4fe954c029de555", // <---- YOUR INFURA ID! (or it won't work)
       accounts: {
         mnemonic: mnemonic(),
       },
@@ -98,12 +98,12 @@ task(
     const hdwallet = hdkey.fromMasterSeed(seed);
     const wallet_hdpath = "m/44'/60'/0'/0/";
     const account_index = 0;
-    let fullPath = wallet_hdpath + account_index;
+    const fullPath = wallet_hdpath + account_index;
     if (DEBUG) console.log("fullPath", fullPath);
     const wallet = hdwallet.derivePath(fullPath).getWallet();
     const privateKey = "0x" + wallet._privKey.toString("hex");
     if (DEBUG) console.log("privateKey", privateKey);
-    var EthUtil = require("ethereumjs-util");
+    const EthUtil = require("ethereumjs-util");
     const address =
       "0x" + EthUtil.privateToAddress(wallet._privKey).toString("hex");
     console.log(
@@ -126,32 +126,32 @@ task(
   async (_, { ethers }) => {
     const hdkey = require("ethereumjs-wallet/hdkey");
     const bip39 = require("bip39");
-    let mnemonic = fs.readFileSync("./mnemonic.txt").toString().trim();
+    const mnemonic = fs.readFileSync("./mnemonic.txt").toString().trim();
     if (DEBUG) console.log("mnemonic", mnemonic);
     const seed = await bip39.mnemonicToSeed(mnemonic);
     if (DEBUG) console.log("seed", seed);
     const hdwallet = hdkey.fromMasterSeed(seed);
     const wallet_hdpath = "m/44'/60'/0'/0/";
     const account_index = 0;
-    let fullPath = wallet_hdpath + account_index;
+    const fullPath = wallet_hdpath + account_index;
     if (DEBUG) console.log("fullPath", fullPath);
     const wallet = hdwallet.derivePath(fullPath).getWallet();
     const privateKey = "0x" + wallet._privKey.toString("hex");
     if (DEBUG) console.log("privateKey", privateKey);
-    var EthUtil = require("ethereumjs-util");
+    const EthUtil = require("ethereumjs-util");
     const address =
       "0x" + EthUtil.privateToAddress(wallet._privKey).toString("hex");
 
-    var qrcode = require("qrcode-terminal");
+    const qrcode = require("qrcode-terminal");
     qrcode.generate(address);
     console.log("‍📬 Deployer Account is " + address);
-    for (let n in config.networks) {
-      //console.log(config.networks[n],n)
+    for (const n in config.networks) {
+      // console.log(config.networks[n],n)
       try {
-        let provider = new ethers.providers.JsonRpcProvider(
+        const provider = new ethers.providers.JsonRpcProvider(
           config.networks[n].url
         );
-        let balance = await provider.getBalance(address);
+        const balance = await provider.getBalance(address);
         console.log(" -- " + n + " --  -- -- 📡 ");
         console.log("   balance: " + ethers.utils.formatEther(balance));
         console.log(

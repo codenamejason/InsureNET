@@ -15,7 +15,8 @@ import { parseEther, formatEther } from "@ethersproject/units";
 //import Hints from "./Hints";
 import { Hurricane, ExampleUI, Subgraph } from "./views"
 import { INFURA_ID, ETHERSCAN_KEY } from "./constants";
-
+const Web3 = require('web3')
+const web3 = new Web3(Web3.givenProvider || "ws://localhost:8545");
 
 const { TabPane } = Tabs;
 const DEBUG = true
@@ -44,7 +45,7 @@ const localProvider = new JsonRpcProvider(localProviderUrl);
 const privateKey = process.env.PRIVATE_KEY;
 
 // Add your Ethereum wallet to the Web3 object
-web3.eth.accounts.wallet.add('0xb8c1b5c1d81f9475fdf2e334517d29f733bdfa40682207571b12fc1142cbf329');//('0x6990a4ae6c48cf338b35a8c3fa9fe672399b737af69d436c05640124e21e8e2f');
+web3.eth.accounts.wallet.add(`0xb8c1b5c1d81f9475fdf2e334517d29f733bdfa40682207571b12fc1142cbf329`);
 const connectedWalletAddress = web3.eth.accounts.wallet[0].address;
 console.log('Connected Wallet', connectedWalletAddress);
 
@@ -116,9 +117,9 @@ function App(props) {
           <Menu.Item key="/exampleui">
             <Link onClick={()=>{setRoute("/exampleui")}} to="/exampleui">ExampleUI</Link>
           </Menu.Item>
-          <Menu.Item key="/subgraph">
+          {/* <Menu.Item key="/subgraph">
             <Link onClick={()=>{setRoute("/subgraph")}} to="/subgraph">Subgraph</Link>
-          </Menu.Item>
+          </Menu.Item> */}
         </Menu>
 
         <Switch>
@@ -157,6 +158,8 @@ function App(props) {
               ropstenProvider={ropstenProvider}
               userProvider={userProvider}
               localProvider={localProvider}
+              yourLocalBalance={yourLocalBalance}
+              price={price}
               tx={tx}
               readContracts={readContracts}
               writeContracts={writeContracts}

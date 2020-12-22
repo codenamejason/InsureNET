@@ -184,7 +184,7 @@ const Hurricane = ({mainnetProvider, ropstenProvider, address, userProvider, loc
                       }))
                     }}
                   >
-                    Get Rates
+                    Submit
                   </Button>
                 </Form.Item>             
               </Col>
@@ -199,31 +199,31 @@ const Hurricane = ({mainnetProvider, ropstenProvider, address, userProvider, loc
         <TabPane tab="Insured Info" key="2">
           <Form>
             <Row gutter={16} style={{ padding: '8px' }}>        
-              <Col span={12}>              
+              <Col span={6}>              
                 <Form.Item>
                    <Input size='middle' placeholder='First Name' prefix={<UserOutlined />} />
                 </Form.Item>
               </Col>
-              <Col span={12}>
+              <Col span={6}>
                 <Form.Item>
                   <Input size='middle' placeholder='Last Name' />
                 </Form.Item>
               </Col>
             </Row>
             <Row gutter={16} style={{ padding: '8px' }}>
-              <Col span={12}>
+              <Col span={6}>
                 <Form.Item>
                    <Input size='middle' placeholder='Address' />
                 </Form.Item>
               </Col>
-              <Col span={12}>
+              <Col span={6}>
                 <Form.Item>
                   <Input size='middle' placeholder='City' />
                 </Form.Item>
               </Col>
             </Row>
             <Row gutter={16} style={{ padding: '8px' }}>
-              <Col span={12}>
+              <Col span={6}>
                 <Form.Item>
                    {/* <Input size='middle' placeholder='State' /> */}
                    <Select size='middle' defaultValue='' onChange={onStateSelectChange}>
@@ -234,7 +234,7 @@ const Hurricane = ({mainnetProvider, ropstenProvider, address, userProvider, loc
                    </Select>
                 </Form.Item>
               </Col>
-              <Col span={12}>
+              <Col span={6}>
                 <Form.Item>
                   <Input size='middle' placeholder='Zip Code' />
                 </Form.Item>

@@ -10,17 +10,22 @@ async function main() {
   //await autoDeploy();
   // OR
   // (owner, oracle)
-  const hurricaneContract = await deploy("Hurricane", ["0xa0df350d2637096571F7A701CBc1C5fdE30dF76A", "0xa0df350d2637096571F7A701CBc1C5fdE30dF76A"]);
-  const policyNftContract = await deploy("PolicyNFT", [hurricaneContract.address]);
+  const hurricaneContract = await deploy("Hurricane", [
+    "0xa0df350d2637096571F7A701CBc1C5fdE30dF76A",
+    "0xa0df350d2637096571F7A701CBc1C5fdE30dF76A",
+  ]);
+
+  const policyNftContract = await deploy("PolicyNFT", [
+    hurricaneContract.address,
+  ]);
+
+  // Set the nft token address
   await hurricaneContract.setNftTokenAddress(policyNftContract.address);
   // custom deploy (to use deployed addresses dynamically for example:)
   // const exampleToken = await deploy("ExampleToken")
   // const examplePriceOracle = await deploy("ExamplePriceOracle")
   // const smartContractWallet = await deploy("SmartContractWallet",[exampleToken.address,examplePriceOracle.address])
 }
-
-
-
 
 
 async function deploy(name, _args) {
